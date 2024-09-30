@@ -28,6 +28,8 @@ MODELS = {
     'NorESM': dict(
         # model_id='jang.test', ),
         model_id='NorESM2.5-hybrid.20240822', ),
+    'MODISTerra': dict(
+        model_id='MODIS6.1terra', ),
     # 'webname': dict(
     #     model_id='model_name_from_files', ),
 
@@ -97,7 +99,7 @@ CFG = dict(
 
     # if True, the analysis will stop whenever an error occurs (else, errors that
     # occurred will be written into the logfiles)
-    raise_exceptions=True,
+    raise_exceptions=False,
 
     # Regional filter for analysis
     filter_name='ALL-wMOUNTAINS',
