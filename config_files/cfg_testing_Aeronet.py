@@ -28,8 +28,6 @@ MODELS = {
     'NorESM': dict(
         # model_id='jang.test', ),
         model_id='NorESM2.5-hybrid.20240822', ),
-    'MODISTerra': dict(
-        model_id='MODIS6.1terra', ),
     # 'webname': dict(
     #     model_id='model_name_from_files', ),
 
@@ -48,18 +46,26 @@ AERONET_SITE_FILTER = dict(station_name='DRAGON*', negate='station_name')
 OBS_GROUNDBASED = {
 
     'Aeronet': dict(obs_id='AeronetSunV3Lev2.daily',
-                           obs_vars=['od550aer', ],
-                           obs_vert_type='Column',
-                           obs_filters={**ALTITUDE_FILTER,
-                                        **AERONET_SITE_FILTER},
-                           min_num_obs={'monthly': {'daily': 3}},
-                           ),
+                    obs_vars=['od550aer', ],
+                    obs_vert_type='Column',
+                    obs_filters={**ALTITUDE_FILTER,
+                                 **AERONET_SITE_FILTER},
+                    min_num_obs={'monthly': {'daily': 3}},
+                    ),
     'EBAS': dict(obs_id='EBASMC',
-                           obs_vars=['concso2', 'concso4t'],
-                           obs_vert_type='Surface',
-                           obs_filters={**ALTITUDE_FILTER,
-                                        },
-                           ),
+                 obs_vars=['concso2', 'concso4t'],
+                 obs_vert_type='Surface',
+                 obs_filters={**ALTITUDE_FILTER,
+                              },
+                 ),
+    "MODISterra": dict(
+        obs_id="MODIS6.1terra",
+        obs_vars=["od550aer"],
+        # Which vertical code
+        obs_vert_type="Column",
+        # web_interface_name="LIVASV3",
+        regrid_res_deg=2,
+    ),
 
 }
 
@@ -85,14 +91,14 @@ CFG = dict(
     coldata_basedir=os.path.abspath("/nird/home/jang/data/aeroval/coldata"),
     io_aux_file=os.path.abspath("/nird/home/jang/data/aeroval/pyaeroval_config/eval_py/gridded_io_aux.py"),
     var_scale_colmap_file=os.path.abspath(
-            "/nird/home/jang/data/aeroval/pyaeroval_config/config_files/var_scale_colmap.ini"
-        ),
+        "/nird/home/jang/data/aeroval/pyaeroval_config/config_files/var_scale_colmap.ini"
+    ),
 
     # if True, existing colocated data files will be deleted
     reanalyse_existing=True,
     only_json=False,
     add_model_maps=True,
-    only_model_maps=False,
+    # only_model_maps=False,
 
     # clear_existing_json=False,
     clear_existing_json=True,
@@ -117,6 +123,7 @@ CFG = dict(
     zeros_to_nan=False,
     # add_trends=True,
     # trends_min_yrs=3,
+    stats_tseries_base_freq="monthly",
 
     # min_num_obs=DEFAULT_RESAMPLE_CONSTRAINTS,
     colocate_time=False,
@@ -130,7 +137,7 @@ CFG = dict(
     annual_stats_constrained=False,
 
     proj_id='nird_test',
-    exp_id = 'NorESM_Nird',
+    exp_id='NorESM_Nird',
     exp_name='testing analysis for running on NIRD',
     exp_descr=('some testing analysis for nird'),
     exp_pi='Jan Griesfeller (jan.griesfeller@met.no)',
@@ -140,12 +147,11 @@ CFG = dict(
     weighted_stats=True,
 )
 
-
 if __name__ == '__main__':
-
     import matplotlib.pyplot as plt
 
     from pyaerocom import change_verbosity
+
     change_verbosity(logging.DEBUG)
     logger.setLevel(logging.DEBUG)
 
